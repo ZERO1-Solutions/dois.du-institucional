@@ -4,49 +4,11 @@ import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-const projects = [
-  {
-    id: 1,
-    title: 'Loja Moderna',
-    category: 'Identidade Visual',
-    year: 2024,
-    description: 'Criação completa da identidade visual para uma loja de moda.',
-    image: 'https://coreva-normal.trae.ai/api/ide/v1/text-to-image?prompt=Brand%20identity%20design%20for%20a%20modern%20clothing%20store%2C%20minimalist%20style&image_size=square',
-    client: 'Loja Moderna',
-    objective: 'Criar uma identidade visual moderna e atraente para uma loja de roupas.',
-    challenge: 'Diferenciar a marca em um mercado competitivo.',
-    solution: 'Desenvolver uma identidade visual clean e elegante, com foco na tipografia e cores neutras.'
-  },
-  {
-    id: 2,
-    title: 'Café Doce',
-    category: 'Social Media',
-    year: 2024,
-    description: 'Planejamento e design de conteúdo para redes sociais de uma cafeteria.',
-    image: 'https://coreva-normal.trae.ai/api/ide/v1/text-to-image?prompt=Social%20media%20design%20for%20a%20coffee%20shop%2C%20warm%20colors%2C%20minimalist&image_size=square',
-    client: 'Café Doce',
-    objective: 'Aumentar o engajamento nas redes sociais.',
-    challenge: 'Criar conteúdo visualmente atraente e alinhado com a identidade da marca.',
-    solution: 'Desenvolver um calendário de postagens com design consistente e convidativo.'
-  },
-  {
-    id: 3,
-    title: 'Studio Beauty',
-    category: 'Materiais Impressos',
-    year: 2023,
-    description: 'Flyers, cartões e catálogos para um salão de beleza.',
-    image: 'https://coreva-normal.trae.ai/api/ide/v1/text-to-image?prompt=Print%20materials%20for%20beauty%20salon%2C%20elegant%20design&image_size=square',
-    client: 'Studio Beauty',
-    objective: 'Criar materiais impressos profissionais.',
-    challenge: 'Manter a elegância e sofisticação da marca em todos os materiais.',
-    solution: 'Design minimalista com acabamentos premium.'
-  }
-];
+import data from '@/content/data.json';
 
 export default function Projeto() {
   const params = useParams();
-  const project = projects.find(p => p.id === Number(params.id));
+  const project = data.projects.find(p => p.id === Number(params.id));
 
   if (!project) {
     return <div>Projeto não encontrado</div>;

@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import data from '@/content/data.json';
 
 export default function Home() {
+  const { home, testimonials, services } = data;
+  
   return (
     <main>
       <Header />
@@ -19,10 +22,10 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-5xl md:text-6xl font-bold text-black-primary leading-tight">
-                Transformando ideias em identidades memoráveis.
+                {home.title}
               </h1>
               <p className="mt-6 text-lg text-gray-600">
-                Estúdio de design gráfico especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão.
+                {home.description}
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <button className="bg-green-primary text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-secondary transition-colors">
@@ -41,7 +44,7 @@ export default function Home() {
             >
               <div className="aspect-square bg-gray-light rounded-3xl overflow-hidden">
                 <img 
-                  src="https://coreva-normal.trae.ai/api/ide/v1/text-to-image?prompt=Professional%20portrait%20of%20a%20graphic%20designer%2C%20elegant%2C%20minimalist%20style&image_size=square" 
+                  src="https://placehold.co/600x600/29471E/FFFFFF?text=Designer" 
                   alt="Designer"
                   className="w-full h-full object-cover"
                 />
@@ -58,11 +61,7 @@ export default function Home() {
             Depoimentos
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: 'Ana Silva', company: 'Loja Moderna', text: 'Trabalho incrível! A identidade visual ficou exatamente como imaginávamos.' },
-              { name: 'Carlos Costa', company: 'Café Doce', text: 'Profissionalismo e criatividade em cada detalhe. Recomendo muito!' },
-              { name: 'Maria Souza', company: 'Studio Beauty', text: 'Resultado superou nossas expectativas. Parabéns pelo trabalho!' }
-            ].map((testimonial, index) => (
+            {testimonials.map((testimonial, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -87,11 +86,7 @@ export default function Home() {
             Nossos Serviços
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { title: 'Identidade Visual', description: 'Criação de marca, redesign e manual de marca completo.' },
-              { title: 'Social Media', description: 'Planejamento visual, design para redes sociais e campanhas.' },
-              { title: 'Materiais Impressos', description: 'Cartões, catálogos, flyers, banners e muito mais.' }
-            ].map((service, index) => (
+            {services.map((service, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
