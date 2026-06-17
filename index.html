@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </head>
+  <body>
+    <!-- Include the Decap CMS script -->
+    <script>
+      window.CMS_CONFIGURATION = {
+        config: {
+          backend: {
+            name: "github",
+            repo: "ZERO1-Solutions/dois.du-institucional",
+            branch: "main",
+          },
+          media_folder: "public/images/uploads",
+          public_folder: "/images/uploads",
+          collections: [
+            {
+              name: "projects",
+              label: "Projetos",
+              folder: "content/projects",
+              create: true,
+              slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+              fields: [
+                { label: "Título", name: "title", widget: "string" },
+                { label: "Cliente", name: "client", widget: "string" },
+                { label: "Categoria", name: "category", widget: "string" },
+                { label: "Ano", name: "year", widget: "number" },
+                { label: "Imagem de capa", name: "cover", widget: "image" },
+                { label: "Projeto em destaque", name: "featured", widget: "boolean", default: false },
+                { label: "Descrição", name: "description", widget: "text" },
+                { label: "Sobre o cliente", name: "about_client", widget: "text" },
+                { label: "Objetivo", name: "objective", widget: "text" },
+                { label: "Desafio", name: "challenge", widget: "text" },
+                { label: "Solução", name: "solution", widget: "text" },
+                { label: "Logo principal", name: "logo_main", widget: "image" },
+                { label: "Logo secundária", name: "logo_secondary", widget: "image" },
+                { label: "Paleta de cores", name: "colors", widget: "string" },
+                { label: "Tipografia", name: "typography", widget: "string" },
+                {
+                  label: "Serviços realizados",
+                  name: "services",
+                  widget: "select",
+                  multiple: true,
+                  options: [
+                    "Identidade Visual",
+                    "Social Media",
+                    "Cartão de Visita",
+                    "Banner",
+                    "Flyer",
+                    "Catálogo",
+                    "Fachada",
+                    "Embalagem"
+                  ]
+                },
+                { label: "Galeria", name: "gallery", widget: "list", field: { label: "Imagem", name: "image", widget: "image" } }
+              ]
+            },
+            {
+              name: "testimonials",
+              label: "Depoimentos",
+              folder: "content/testimonials",
+              create: true,
+              fields: [
+                { label: "Nome", name: "name", widget: "string" },
+                { label: "Empresa", name: "company", widget: "string" },
+                { label: "Depoimento", name: "text", widget: "text" }
+              ]
+            }
+          ]
+        }
+      };
+    </script>
+  </body>
+</html>
