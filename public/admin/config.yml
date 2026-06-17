@@ -1,9 +1,5 @@
 backend:
-  name: github
-  repo: ZERO1-Solutions/dois.du-institucional
-  branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
+  name: git-gateway
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
