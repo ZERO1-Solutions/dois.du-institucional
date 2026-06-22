@@ -1,0 +1,101 @@
+{
+  "site": {
+    "name": "dois.du",
+    "description": "Estúdio de design gráfico especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão"
+  },
+  "home": {
+    "title": "Transformando ideias em identidades memoráveis.",
+    "description": "Estúdio de design gráfico especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão."
+  },
+  "testimonials": [
+    {
+      "name": "Ana Silva",
+      "company": "Loja Moderna",
+      "text": "Trabalho incrível! A identidade visual ficou exatamente como imaginávamos."
+    },
+    {
+      "name": "Carlos Costa",
+      "company": "Café Doce",
+      "text": "Profissionalismo e criatividade em cada detalhe. Recomendo muito!"
+    },
+    {
+      "name": "Maria Souza",
+      "company": "Studio Beauty",
+      "text": "Resultado superou nossas expectativas. Parabéns pelo trabalho!"
+    }
+  ],
+  "services": [
+    {
+      "title": "Identidade Visual",
+      "description": "Criação de marca, redesign e manual de marca completo."
+    },
+    {
+      "title": "Social Media",
+      "description": "Planejamento visual, design para redes sociais e campanhas."
+    },
+    {
+      "title": "Materiais Impressos",
+      "description": "Cartões, catálogos, flyers, banners e muito mais."
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Loja Moderna",
+      "category": "Identidade Visual",
+      "year": 2024,
+      "description": "Criação completa da identidade visual para uma loja de moda.",
+      "coverImage": "https://placehold.co/600x600/29471E/FFFFFF?text=Loja+Moderna",
+      "galleryImages": [
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+3"
+      ],
+      "client": "Loja Moderna",
+      "objective": "Criar uma identidade visual moderna e atraente para uma loja de roupas.",
+      "challenge": "Diferenciar a marca em um mercado competitivo.",
+      "solution": "Desenvolver uma identidade visual clean e elegante, com foco na tipografia e cores neutras."
+    },
+    {
+      "id": 2,
+      "title": "Café Doce",
+      "category": "Social Media",
+      "year": 2024,
+      "description": "Planejamento e design de conteúdo para redes sociais de uma cafeteria.",
+      "coverImage": "https://placehold.co/600x600/345A27/FFFFFF?text=Café+Doce",
+      "galleryImages": [
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+3"
+      ],
+      "client": "Café Doce",
+      "objective": "Aumentar o engajamento nas redes sociais.",
+      "challenge": "Criar conteúdo visualmente atraente e alinhado com a identidade da marca.",
+      "solution": "Desenvolver um calendário de postagens com design consistente e convidativo."
+    },
+    {
+      "id": 3,
+      "title": "Studio Beauty",
+      "category": "Materiais Impressos",
+      "year": 2023,
+      "description": "Flyers, cartões e catálogos para um salão de beleza.",
+      "coverImage": "https://placehold.co/600x600/F46A2C/FFFFFF?text=Studio+Beauty",
+      "galleryImages": [
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+3"
+      ],
+      "client": "Studio Beauty",
+      "objective": "Criar materiais impressos profissionais.",
+      "challenge": "Manter a elegância e sofisticação da marca em todos os materiais.",
+      "solution": "Design minimalista com acabamentos premium."
+    }
+  ],
+  "about": {
+    "title": "Quem é Eduardo?",
+    "description1": "Sou o fundador do estúdio dois.du, apaixonado por design gráfico e por transformar ideias em realidade visual. Com anos de experiência no mercado, desenvolvi projetos para diversos clientes, sempre buscando qualidade e atenção aos detalhes.",
+    "description2": "A dois.du nasceu com a missão de criar identidades visuais fortes e memoráveis, que realmente representem a essência de cada marca.",
+    "philosophy": "Nossa Filosofia",
+    "philosophyText": "Criatividade aliada a estratégia, sempre focada nos resultados do cliente. Cada projeto é único e desenvolvido com muito cuidado e dedicação."
+  }
+}
