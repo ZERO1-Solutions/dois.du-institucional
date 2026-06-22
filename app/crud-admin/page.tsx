@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 
 type Project = {
   id: number;
@@ -8,7 +9,8 @@ type Project = {
   category: string;
   year: number;
   description: string;
-  image: string;
+  coverImage: string;
+  galleryImages: string[];
   client: string;
   objective: string;
   challenge: string;
@@ -291,7 +293,8 @@ export default function CrudAdmin() {
                         category: 'Identidade Visual',
                         year: new Date().getFullYear(),
                         description: '',
-                        image: '',
+                        coverImage: '',
+                        galleryImages: [],
                         client: '',
                         objective: '',
                         challenge: '',
@@ -307,7 +310,7 @@ export default function CrudAdmin() {
             </div>
 
             {data.projects.map((project: Project, index: number) => (
-              <div key={project.id} className="p-4 border border-gray-200 rounded-xl space-y-3">
+              <div key={project.id} className="p-4 border border-gray-200 rounded-xl space-y-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-lg font-semibold text-black-primary">{project.title}</h3>
                   <button
@@ -323,7 +326,7 @@ export default function CrudAdmin() {
                   </button>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {Object.entries(project).map(([key, value]) => key !== 'id' && (
+                  {Object.entries(project).map(([key, value]) => key !== 'id' && key !== 'coverImage' && key !== 'galleryImages' && (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
@@ -364,6 +367,89 @@ export default function CrudAdmin() {
                       )}
                     </div>
                   ))}
+                </div>
+                {/* Cover Image Upload */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Imagem de Capa</label>
+                  <div className="flex gap-3 items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const fileName = `${Date.now()}-${file.name}`;
+                        const { data, error } = await supabase.storage
+                          .from('portfolio-images')
+                          .upload(fileName, file);
+                        if (error) {
+                          console.error('Error uploading file:', error);
+                          return;
+                        }
+                        const { data: { publicUrl } } = supabase.storage
+                          .from('portfolio-images')
+                          .getPublicUrl(data.path);
+                        const newProjects = [...data.projects];
+                        newProjects[index] = { ...newProjects[index], coverImage: publicUrl };
+                        setData({ ...data, projects: newProjects });
+                      }}
+                      className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none"
+                    />
+                  </div>
+                  {project.coverImage && (
+                    <img src={project.coverImage} alt="Cover" className="w-32 h-32 object-cover rounded-lg mt-2" />
+                  )}
+                </div>
+                {/* Gallery Images Upload */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Imagens da Galeria</label>
+                  <div className="flex gap-3 items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={async (e) => {
+                        const files = Array.from(e.target.files || []);
+                        if (!files.length) return;
+                        const newGalleryImages: string[] = [...project.galleryImages];
+                        for (const file of files) {
+                          const fileName = `${Date.now()}-${file.name}`;
+                          const { data, error } = await supabase.storage
+                            .from('portfolio-images')
+                            .upload(fileName, file);
+                          if (error) {
+                            console.error('Error uploading file:', error);
+                            continue;
+                          }
+                          const { data: { publicUrl } } = supabase.storage
+                            .from('portfolio-images')
+                            .getPublicUrl(data.path);
+                          newGalleryImages.push(publicUrl);
+                        }
+                        const newProjects = [...data.projects];
+                        newProjects[index] = { ...newProjects[index], galleryImages: newGalleryImages };
+                        setData({ ...data, projects: newProjects });
+                      }}
+                      className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 mt-2">
+                    {project.galleryImages.map((img, imgIndex) => (
+                      <div key={imgIndex} className="relative">
+                        <img src={img} alt={`Galeria ${imgIndex + 1}`} className="w-full aspect-square object-cover rounded-lg" />
+                        <button
+                          onClick={() => {
+                            const newProjects = [...data.projects];
+                            newProjects[index].galleryImages = newProjects[index].galleryImages.filter((_, i) => i !== imgIndex);
+                            setData({ ...data, projects: newProjects });
+                          }}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}

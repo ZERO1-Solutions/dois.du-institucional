@@ -45,7 +45,12 @@
       "category": "Identidade Visual",
       "year": 2024,
       "description": "Criação completa da identidade visual para uma loja de moda.",
-      "image": "https://placehold.co/600x600/29471E/FFFFFF?text=Loja+Moderna",
+      "coverImage": "https://placehold.co/600x600/29471E/FFFFFF?text=Loja+Moderna",
+      "galleryImages": [
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/29471E/FFFFFF?text=Galeria+3"
+      ],
       "client": "Loja Moderna",
       "objective": "Criar uma identidade visual moderna e atraente para uma loja de roupas.",
       "challenge": "Diferenciar a marca em um mercado competitivo.",
@@ -57,7 +62,12 @@
       "category": "Social Media",
       "year": 2024,
       "description": "Planejamento e design de conteúdo para redes sociais de uma cafeteria.",
-      "image": "https://placehold.co/600x600/345A27/FFFFFF?text=Café+Doce",
+      "coverImage": "https://placehold.co/600x600/345A27/FFFFFF?text=Café+Doce",
+      "galleryImages": [
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/345A27/FFFFFF?text=Galeria+3"
+      ],
       "client": "Café Doce",
       "objective": "Aumentar o engajamento nas redes sociais.",
       "challenge": "Criar conteúdo visualmente atraente e alinhado com a identidade da marca.",
@@ -69,7 +79,12 @@
       "category": "Materiais Impressos",
       "year": 2023,
       "description": "Flyers, cartões e catálogos para um salão de beleza.",
-      "image": "https://placehold.co/600x600/F46A2C/FFFFFF?text=Studio+Beauty",
+      "coverImage": "https://placehold.co/600x600/F46A2C/FFFFFF?text=Studio+Beauty",
+      "galleryImages": [
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+1",
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+2",
+        "https://placehold.co/600x600/F46A2C/FFFFFF?text=Galeria+3"
+      ],
       "client": "Studio Beauty",
       "objective": "Criar materiais impressos profissionais.",
       "challenge": "Manter a elegância e sofisticação da marca em todos os materiais.",

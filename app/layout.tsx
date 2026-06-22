@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "dois.du - Estúdio de Design Gráfico",
   description: "Transformando ideias em identidades memoráveis. Especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão.",
+  icons: {
+    icon: "/images/Site/logo-144x144px-semfundo.png",
+    apple: "/images/Site/logo-144x144px-semfundo.png",
+  },
 };
 
 export default function RootLayout({
