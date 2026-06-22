@@ -168,11 +168,10 @@ export default function CrudAdmin() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
-                activeTab === tab
-                  ? 'bg-green-primary text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${activeTab === tab
+                ? 'bg-green-primary text-white'
+                : 'text-gray-600 hover:bg-gray-100'
+                }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
@@ -181,9 +180,8 @@ export default function CrudAdmin() {
       </div>
 
       {message && (
-        <div className={`container mx-auto px-6 py-4 mt-4 ${
-          message.includes('sucesso') ? 'bg-green-100 text-green-primary' : 'bg-red-100 text-red-600'
-        } rounded-xl`}>
+        <div className={`container mx-auto px-6 py-4 mt-4 ${message.includes('sucesso') ? 'bg-green-100 text-green-primary' : 'bg-red-100 text-red-600'
+          } rounded-xl`}>
           {message}
         </div>
       )}
@@ -193,7 +191,7 @@ export default function CrudAdmin() {
         {activeTab === 'home' && (
           <div className="bg-white p-6 rounded-2xl shadow-sm space-y-6">
             <h2 className="text-xl font-bold text-black-primary">Home</h2>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Título Principal</label>
               <input
@@ -203,7 +201,7 @@ export default function CrudAdmin() {
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-primary"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Descrição Principal</label>
               <textarea
@@ -379,16 +377,17 @@ export default function CrudAdmin() {
                         const file = e.target.files?.[0];
                         if (!file) return;
                         const fileName = `${Date.now()}-${file.name}`;
-                        const { data, error } = await supabase.storage
+                        const { data: uploadData, error } = await supabase.storage
                           .from('portfolio-images')
                           .upload(fileName, file);
-                        if (error) {
+                        if (error || !uploadData) {
                           console.error('Error uploading file:', error);
                           return;
                         }
+
                         const { data: { publicUrl } } = supabase.storage
                           .from('portfolio-images')
-                          .getPublicUrl(data.path);
+                          .getPublicUrl(uploadData.path);
                         const newProjects = [...data.projects];
                         newProjects[index] = { ...newProjects[index], coverImage: publicUrl };
                         setData({ ...data, projects: newProjects });
@@ -414,16 +413,17 @@ export default function CrudAdmin() {
                         const newGalleryImages: string[] = [...project.galleryImages];
                         for (const file of files) {
                           const fileName = `${Date.now()}-${file.name}`;
-                          const { data, error } = await supabase.storage
+                          const { data: uploadData, error } = await supabase.storage
                             .from('portfolio-images')
                             .upload(fileName, file);
-                          if (error) {
+                          if (error || !uploadData) {
                             console.error('Error uploading file:', error);
-                            continue;
+                            return;
                           }
+
                           const { data: { publicUrl } } = supabase.storage
                             .from('portfolio-images')
-                            .getPublicUrl(data.path);
+                            .getPublicUrl(uploadData.path);
                           newGalleryImages.push(publicUrl);
                         }
                         const newProjects = [...data.projects];
