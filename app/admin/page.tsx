@@ -23,9 +23,15 @@ type Testimonial = {
   text: string;
 };
 
+type Service = {
+  title: string;
+  description: string;
+};
+
 type Data = {
   projects: Project[];
   testimonials: Testimonial[];
+  services: Service[];
   [key: string]: any;
 };
 
@@ -272,7 +278,7 @@ export default function CrudAdmin() {
                       onClick={() => {
                         setData({
                           ...data,
-                          services: data.services.filter((_, i) => i !== index)
+                          services: data.services.filter((_: Service, i: number) => i !== index)
                         });
                       }}
                       className="text-red-500 hover:text-red-700 text-sm font-semibold"
@@ -390,7 +396,7 @@ export default function CrudAdmin() {
                       e.stopPropagation();
                       setData({
                         ...data,
-                        projects: data.projects.filter((_: any, i: number) => i !== index)
+                        projects: data.projects.filter((_: Project, i: number) => i !== index)
                       });
                       setMessage('Projeto excluído com sucesso!');
                     }}
@@ -546,7 +552,7 @@ export default function CrudAdmin() {
                             <button
                               onClick={() => {
                                 const newProjects = [...data.projects];
-                                newProjects[index].galleryImages = newProjects[index].galleryImages.filter((_, i) => i !== imgIndex);
+                                newProjects[index].galleryImages = newProjects[index].galleryImages.filter((_: string, i: number) => i !== imgIndex);
                                 setData({ ...data, projects: newProjects });
                                 setMessage('Imagem da galeria removida com sucesso!');
                               }}
@@ -595,7 +601,7 @@ export default function CrudAdmin() {
                     onClick={() => {
                       setData({
                         ...data,
-                        testimonials: data.testimonials.filter((_: any, i: number) => i !== index)
+                        testimonials: data.testimonials.filter((_: Testimonial, i: number) => i !== index)
                       });
                       setMessage('Depoimento excluído com sucesso!');
                     }}
