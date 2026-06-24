@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "dois.du - Estúdio de Design Gráfico",
   description: "Transformando ideias em identidades memoráveis. Especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão.",
   icons: {
-    icon: "/images/Site/logo-144x144px-semfundo.png",
-    apple: "/images/Site/logo-144x144px-semfundo.png",
+    icon: "/images/Site/logo-miniatura.png",
+    apple: "/images/Site/logo-miniatura.png",
   },
 };
 

@@ -1,7 +1,13 @@
 {
   "site": {
     "name": "dois.du",
-    "description": "Estúdio de design gráfico especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão"
+    "description": "Estúdio de design gráfico especializado em Identidade Visual, Social Media e Materiais Gráficos para Impressão",
+    "contactEmail": "eduardo.doisdu@gmail.com",
+    "whatsappNumber": "5554996418178",
+    "instagramLink": "https://www.instagram.com/dois.du/",
+    "facebookLink": "https://www.facebook.com/2dois.du",
+    "linkedinLink": "https://www.linkedin.com/in/eduardo-luiz-gobbi/",
+    "behanceLink": "https://www.behance.net/eduardogobbi"
   },
   "home": {
     "title": "Transformando ideias em identidades memoráveis.",
@@ -22,6 +28,11 @@
       "name": "Maria Souza",
       "company": "Studio Beauty",
       "text": "Resultado superou nossas expectativas. Parabéns pelo trabalho!"
+    },
+    {
+      "name": "Yuri Mikhael",
+      "company": "Zero1 Solluções em Tecnologia",
+      "text": "Um designer muito rápido no desenvolvimento e entrega"
     }
   ],
   "services": [
@@ -89,10 +100,27 @@
       "objective": "Criar materiais impressos profissionais.",
       "challenge": "Manter a elegância e sofisticação da marca em todos os materiais.",
       "solution": "Design minimalista com acabamentos premium."
+    },
+    {
+      "id": 4,
+      "title": "Novo Projeto",
+      "category": "Identidade Visual",
+      "year": 2026,
+      "description": "tesste",
+      "coverImage": "https://bwsfaiqqgvtlftqpqcop.supabase.co/storage/v1/object/public/portfolio-images/1782264608329-logo.png",
+      "galleryImages": [
+        "https://bwsfaiqqgvtlftqpqcop.supabase.co/storage/v1/object/public/portfolio-images/1782264965149-favicon.png",
+        "https://bwsfaiqqgvtlftqpqcop.supabase.co/storage/v1/object/public/portfolio-images/1782264975284-logo.png",
+        "https://bwsfaiqqgvtlftqpqcop.supabase.co/storage/v1/object/public/portfolio-images/1782264976028-favicon.jpeg"
+      ],
+      "client": "teste",
+      "objective": "teste",
+      "challenge": "teste",
+      "solution": "testetes"
     }
   ],
   "about": {
-    "title": "Quem é Eduardo?",
+    "title": "Quem é Eduardo",
     "description1": "Sou o fundador do estúdio dois.du, apaixonado por design gráfico e por transformar ideias em realidade visual. Com anos de experiência no mercado, desenvolvi projetos para diversos clientes, sempre buscando qualidade e atenção aos detalhes.",
     "description2": "A dois.du nasceu com a missão de criar identidades visuais fortes e memoráveis, que realmente representem a essência de cada marca.",
     "philosophy": "Nossa Filosofia",

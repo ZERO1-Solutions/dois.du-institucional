@@ -1,19 +1,80 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import data from '@/content/data.json';
+
+type Project = {
+  id: number;
+  title: string;
+  category: string;
+  year: number;
+  description: string;
+  coverImage: string;
+  galleryImages: string[];
+  client: string;
+  objective: string;
+  challenge: string;
+  solution: string;
+};
+
+type Data = {
+  projects: Project[];
+};
 
 export default function Projeto() {
   const params = useParams();
-  const project = data.projects.find(p => p.id === Number(params.id));
+  const [data, setData] = useState<Data | null>(null);
+  const [loading, setLoading] = useState(true);
   const [modalImage, setModalImage] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/data');
+        const data = await res.json();
+        setData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <main>
+        <Header />
+        <section className="pt-28 md:pt-32 pb-16 md:pb-20 bg-white">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="flex items-center justify-center py-12">
+              <p className="text-gray-500">Carregando...</p>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
+
+  const project = data?.projects.find(p => p.id === Number(params.id));
+
   if (!project) {
-    return <div>Projeto não encontrado</div>;
+    return (
+      <main>
+        <Header />
+        <section className="pt-28 md:pt-32 pb-16 md:pb-20 bg-white">
+          <div className="container mx-auto px-4 md:px-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-black-primary">Projeto não encontrado</h1>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    );
   }
 
   return (
@@ -28,11 +89,11 @@ export default function Projeto() {
           >
             <h1 className="text-3xl md:text-4xl font-bold text-black-primary">{project.title}</h1>
             <p className="text-base md:text-lg text-gray-600 mt-2">{project.category} • {project.year}</p>
-            <div className="mt-6 md:mt-8 aspect-video bg-gray-light rounded-2xl overflow-hidden border border-gray-200">
+            <div className="mt-6 md:mt-8 aspect-video bg-gray-light rounded-2xl overflow-hidden border border-gray-200 flex items-center justify-center">
               <img 
                 src={project.coverImage} 
                 alt={project.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           </motion.div>
@@ -92,13 +153,13 @@ export default function Projeto() {
               {project.galleryImages.map((img, index) => (
                 <div 
                   key={index} 
-                  className="aspect-square bg-gray-light rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
+                  className="aspect-square bg-gray-light rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200 flex items-center justify-center"
                   onClick={() => setModalImage(img)}
                 >
                   <img 
                     src={img} 
                     alt={`Galeria ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               ))}

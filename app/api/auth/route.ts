@@ -10,9 +10,10 @@ export async function POST(request: Request) {
     // Create a simple cookie session
     const response = NextResponse.json({ success: true });
     response.cookies.set('admin_session', 'true', { 
-      httpOnly: true, 
+      httpOnly: false, // Make accessible to JS for frontend check
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7 // 1 week
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: '/'
     });
     return response;
   }
