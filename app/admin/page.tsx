@@ -28,11 +28,37 @@ type Service = {
   description: string;
 };
 
+type SiteSettings = {
+  name: string;
+  description: string;
+  contactEmail: string;
+  whatsappNumber: string;
+  instagramLink: string;
+  facebookLink: string;
+  linkedinLink: string;
+  behanceLink: string;
+};
+
+type HomeContent = {
+  title: string;
+  description: string;
+};
+
+type AboutContent = {
+  title: string;
+  description1: string;
+  description2: string;
+  philosophy: string;
+  philosophyText: string;
+};
+
 type Data = {
+  site: SiteSettings;
+  home: HomeContent;
+  about: AboutContent;
   projects: Project[];
   testimonials: Testimonial[];
   services: Service[];
-  [key: string]: any;
 };
 
 export default function CrudAdmin() {
@@ -270,7 +296,7 @@ export default function CrudAdmin() {
                   + Adicionar Serviço
                 </button>
               </div>
-              {data.services.map((service: any, index: number) => (
+              {data.services.map((service: Service, index: number) => (
                 <div key={index} className="p-4 border border-gray-200 rounded-xl space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">Serviço {index + 1}</span>
@@ -318,28 +344,32 @@ export default function CrudAdmin() {
         {activeTab === 'about' && (
           <div className="bg-white p-6 rounded-2xl shadow-sm space-y-6">
             <h2 className="text-xl font-bold text-black-primary">Sobre</h2>
-            {Object.entries(data.about).map(([key, value]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
-                  {key.replace(/([A-Z])/g, ' $1').trim()}
-                </label>
-                {typeof value === 'string' && value.length > 100 ? (
-                  <textarea
-                    value={value}
-                    onChange={(e) => setData({ ...data, about: { ...data.about, [key]: e.target.value } })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-primary"
-                    rows={4}
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    value={value as string}
-                    onChange={(e) => setData({ ...data, about: { ...data.about, [key]: e.target.value } })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-primary"
-                  />
-                )}
-              </div>
-            ))}
+            {Object.entries(data.about).map(([key, value]) => {
+              const typedKey = key as keyof AboutContent;
+              const typedValue = value as string;
+              return (
+                <div key={key}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                  </label>
+                  {typedValue.length > 100 ? (
+                    <textarea
+                      value={typedValue}
+                      onChange={(e) => setData({ ...data, about: { ...data.about, [typedKey]: e.target.value } })}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-primary"
+                      rows={4}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={typedValue}
+                      onChange={(e) => setData({ ...data, about: { ...data.about, [typedKey]: e.target.value } })}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-primary"
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -350,7 +380,7 @@ export default function CrudAdmin() {
               <h2 className="text-xl font-bold text-black-primary">Projetos</h2>
               <button
                 onClick={() => {
-                  const newId = Math.max(0, ...data.projects.map((p: any) => p.id)) + 1;
+                  const newId = Math.max(0, ...data.projects.map((p: Project) => p.id)) + 1;
                   setData({
                     ...data,
                     projects: [

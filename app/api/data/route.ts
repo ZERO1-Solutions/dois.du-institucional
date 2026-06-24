@@ -1,6 +1,118 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 
+// Type definitions for Supabase data structures
+type SiteSettings = {
+  id: number;
+  site_name: string;
+  site_description: string;
+  contact_email: string;
+  whatsapp_number: string;
+  instagram_link: string;
+  facebook_link: string;
+  linkedin_link: string;
+  behance_link: string;
+};
+
+type HomeContent = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+type Service = {
+  id: number;
+  title: string;
+  description: string;
+  sort_order: number;
+};
+
+type Testimonial = {
+  id: number;
+  name: string;
+  company: string;
+  text: string;
+  sort_order: number;
+};
+
+type ProjectGallery = {
+  id: number;
+  project_id: number;
+  image_url: string;
+  sort_order: number;
+};
+
+type Project = {
+  id: number;
+  title: string;
+  category: string;
+  year: number;
+  description: string;
+  cover_image: string;
+  client: string;
+  objective: string;
+  challenge: string;
+  solution: string;
+  sort_order: number;
+  project_gallery: ProjectGallery[];
+};
+
+type AboutContent = {
+  id: number;
+  title: string;
+  description1: string;
+  description2: string;
+  philosophy: string;
+  philosophy_text: string;
+};
+
+// Type for the data structure we send back
+type FormattedData = {
+  site: {
+    name: string;
+    description: string;
+    contactEmail: string;
+    whatsappNumber: string;
+    instagramLink: string;
+    facebookLink: string;
+    linkedinLink: string;
+    behanceLink: string;
+  };
+  home: {
+    title: string;
+    description: string;
+  };
+  testimonials: {
+    name: string;
+    company: string;
+    text: string;
+  }[];
+  services: {
+    title: string;
+    description: string;
+  }[];
+  projects: {
+    id: number;
+    title: string;
+    category: string;
+    year: number;
+    description: string;
+    coverImage: string;
+    galleryImages: string[];
+    client: string;
+    objective: string;
+    challenge: string;
+    solution: string;
+  }[];
+  about: {
+    title: string;
+    description1: string;
+    description2: string;
+    philosophy: string;
+    philosophyText: string;
+  };
+};
+
 // Helper to check auth
 function isAuthenticated(request: Request) {
   const cookie = request.headers.get('cookie');
@@ -16,7 +128,7 @@ export async function GET() {
   }
 
   try {
-    // Fetch all data from Supabase tables
+    // Fetch all data from Supabase tables with proper typing
     const [
       { data: siteSettings },
       { data: homeContent },
@@ -34,49 +146,49 @@ export async function GET() {
     ]);
 
     // Format data into the same structure as data.json for compatibility
-    const formattedData = {
+    const formattedData: FormattedData = {
       site: {
-        name: siteSettings?.site_name || 'dois.du',
-        description: siteSettings?.site_description || '',
-        contactEmail: siteSettings?.contact_email || '',
-        whatsappNumber: siteSettings?.whatsapp_number || '',
-        instagramLink: siteSettings?.instagram_link || '',
-        facebookLink: siteSettings?.facebook_link || '',
-        linkedinLink: siteSettings?.linkedin_link || '',
-        behanceLink: siteSettings?.behance_link || ''
+        name: (siteSettings as SiteSettings)?.site_name || 'dois.du',
+        description: (siteSettings as SiteSettings)?.site_description || '',
+        contactEmail: (siteSettings as SiteSettings)?.contact_email || '',
+        whatsappNumber: (siteSettings as SiteSettings)?.whatsapp_number || '',
+        instagramLink: (siteSettings as SiteSettings)?.instagram_link || '',
+        facebookLink: (siteSettings as SiteSettings)?.facebook_link || '',
+        linkedinLink: (siteSettings as SiteSettings)?.linkedin_link || '',
+        behanceLink: (siteSettings as SiteSettings)?.behance_link || ''
       },
       home: {
-        title: homeContent?.title || '',
-        description: homeContent?.description || ''
+        title: (homeContent as HomeContent)?.title || '',
+        description: (homeContent as HomeContent)?.description || ''
       },
-      testimonials: testimonials?.map(t => ({
+      testimonials: (testimonials as Testimonial[])?.map((t: Testimonial) => ({
         name: t.name,
         company: t.company,
         text: t.text
       })) || [],
-      services: services?.map(s => ({
+      services: (services as Service[])?.map((s: Service) => ({
         title: s.title,
         description: s.description
       })) || [],
-      projects: projects?.map(p => ({
+      projects: (projects as Project[])?.map((p: Project) => ({
         id: p.id,
         title: p.title,
         category: p.category,
         year: p.year,
         description: p.description,
         coverImage: p.cover_image,
-        galleryImages: p.project_gallery?.map((g: any) => g.image_url) || [],
+        galleryImages: p.project_gallery?.map((g: ProjectGallery) => g.image_url) || [],
         client: p.client,
         objective: p.objective,
         challenge: p.challenge,
         solution: p.solution
       })) || [],
       about: {
-        title: aboutContent?.title || '',
-        description1: aboutContent?.description1 || '',
-        description2: aboutContent?.description2 || '',
-        philosophy: aboutContent?.philosophy || '',
-        philosophyText: aboutContent?.philosophy_text || ''
+        title: (aboutContent as AboutContent)?.title || '',
+        description1: (aboutContent as AboutContent)?.description1 || '',
+        description2: (aboutContent as AboutContent)?.description2 || '',
+        philosophy: (aboutContent as AboutContent)?.philosophy || '',
+        philosophyText: (aboutContent as AboutContent)?.philosophy_text || ''
       }
     };
 
@@ -100,7 +212,12 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const newData = await request.json();
+    const newData: FormattedData = await request.json();
+
+    // Define types for the items in newData
+    type FormattedService = FormattedData['services'][number];
+    type FormattedTestimonial = FormattedData['testimonials'][number];
+    type FormattedProject = FormattedData['projects'][number];
 
     // Update all tables in parallel
     await Promise.all([
@@ -126,7 +243,7 @@ export async function PUT(request: Request) {
 
       // Update services - first delete existing, then insert new ones
       supabaseServer.from('services').delete().neq('id', 0),
-      ...newData.services.map((service: any, index: number) =>
+      ...newData.services.map((service: FormattedService, index: number) =>
         supabaseServer.from('services').insert({
           title: service.title,
           description: service.description,
@@ -136,7 +253,7 @@ export async function PUT(request: Request) {
 
       // Update testimonials - first delete existing, then insert new ones
       supabaseServer.from('testimonials').delete().neq('id', 0),
-      ...newData.testimonials.map((testimonial: any, index: number) =>
+      ...newData.testimonials.map((testimonial: FormattedTestimonial, index: number) =>
         supabaseServer.from('testimonials').insert({
           name: testimonial.name,
           company: testimonial.company,
@@ -156,7 +273,7 @@ export async function PUT(request: Request) {
       }),
 
       // Update projects and project_gallery
-      ...newData.projects.map(async (project: any, index: number) => {
+      ...newData.projects.map(async (project: FormattedProject, index: number) => {
         // First, check if project exists
         const { data: existingProject } = await supabaseServer
           .from('projects')
@@ -211,7 +328,7 @@ export async function PUT(request: Request) {
           if (insertedProject && project.galleryImages?.length > 0) {
             await supabaseServer.from('project_gallery').insert(
               project.galleryImages.map((url: string, imgIndex: number) => ({
-                project_id: insertedProject.id,
+                project_id: (insertedProject as Project).id,
                 image_url: url,
                 sort_order: imgIndex
               }))
@@ -223,9 +340,9 @@ export async function PUT(request: Request) {
       // Delete projects that are no longer in newData
       (async () => {
         const { data: allProjects } = await supabaseServer.from('projects').select('id');
-        const existingIds = allProjects?.map(p => p.id) || [];
-        const newIds = newData.projects.map((p: any) => p.id);
-        const idsToDelete = existingIds.filter(id => !newIds.includes(id));
+        const existingIds = (allProjects as Project[])?.map((p: Project) => p.id) || [];
+        const newIds = newData.projects.map((p: FormattedProject) => p.id);
+        const idsToDelete = existingIds.filter((id: number) => !newIds.includes(id));
         
         if (idsToDelete.length > 0) {
           await supabaseServer.from('projects').delete().in('id', idsToDelete);
