@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
+import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 
 // Type definitions for Supabase data structures
 type SiteSettings = {
@@ -114,9 +116,18 @@ type FormattedData = {
 };
 
 // Helper to check auth
-function isAuthenticated(request: Request) {
-  const cookie = request.headers.get('cookie');
-  return cookie?.includes('admin_session=true');
+function isAuthenticated() {
+  const cookieStore = cookies();
+  const token = cookieStore.get('admin_token');
+  if (!token) return false;
+
+  try {
+    const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-in-prod';
+    jwt.verify(token.value, JWT_SECRET);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export async function GET() {
@@ -200,7 +211,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!isAuthenticated(request)) {
+  if (!isAuthenticated()) {
     return NextResponse.json({ success: false, message: 'Não autorizado' }, { status: 401 });
   }
 

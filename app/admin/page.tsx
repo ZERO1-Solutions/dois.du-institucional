@@ -76,7 +76,7 @@ export default function CrudAdmin() {
   // Check if logged in on load
   useEffect(() => {
     console.log('Checking auth...');
-    const hasSession = document.cookie.includes('admin_session=true');
+    const hasSession = document.cookie.includes('admin_token');
     console.log('Has session:', hasSession);
     setIsLoggedIn(hasSession);
     setAuthChecked(true);
@@ -123,8 +123,10 @@ export default function CrudAdmin() {
     setLoading(false);
   };
 
-  const handleLogout = () => {
-    document.cookie = 'admin_session=; Max-Age=0; path=/';
+  const handleLogout = async () => {
+    await fetch('/api/auth', {
+      method: 'DELETE'
+    });
     setIsLoggedIn(false);
   };
 

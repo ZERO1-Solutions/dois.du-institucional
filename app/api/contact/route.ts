@@ -1,174 +1,109 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { LRUCache } from 'lru-cache';
+
+// Configure rate limiter
+const rateLimiter = new LRUCache<string, number>({
+  max: 100,
+  ttl: 15 * 60 * 1000, // 15 minutes
+});
+
+// Email validation regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// WhatsApp/phone validation regex (basic)
+const PHONE_REGEX = /^[\d\s\-+()]+$/;
 
 export async function POST(request: Request) {
-  console.log('Contact form API called!');
+  // Rate limiting
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const currentRequests = (rateLimiter.get(ip) || 0) + 1;
+  rateLimiter.set(ip, currentRequests);
+
+  if (currentRequests > 5) {
+    return NextResponse.json(
+      { success: false, message: 'Muitas requisições. Tente novamente mais tarde.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
-    console.log('Received form data:', body);
-    const { name, email, company, service, message } = body;
+    const { name, email, phone, message } = body;
 
     // Validate required fields
-    if (!name || !email || !service || !message) {
+    if (!name || !email || !message) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, message: 'Preencha todos os campos obrigatórios.' },
         { status: 400 }
       );
     }
 
-    // Check environment variables
-    if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.ADMIN_EMAIL) {
-      console.error('Missing SMTP environment variables');
+    // Validate email format
+    if (!EMAIL_REGEX.test(email)) {
       return NextResponse.json(
-        { success: false, error: 'Server configuration error' },
-        { status: 500 }
+        { success: false, message: 'Email inválido.' },
+        { status: 400 }
       );
     }
 
-    // Configure nodemailer
+    // Validate phone format if provided
+    if (phone && !PHONE_REGEX.test(phone)) {
+      return NextResponse.json(
+        { success: false, message: 'Número de telefone inválido.' },
+        { status: 400 }
+      );
+    }
+
+    // Validate message length
+    if (message.trim().length < 10) {
+      return NextResponse.json(
+        { success: false, message: 'Mensagem muito curta (mínimo 10 caracteres).' },
+        { status: 400 }
+      );
+    }
+
+    // Create transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // true for 465, false for other ports
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false, // This helps with some SMTP providers
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    // Verify transporter
-    console.log('Verifying SMTP connection...');
-    await transporter.verify();
-    console.log('SMTP connection verified successfully!');
-
-    // HTML email template
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html lang="pt-BR">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Nova Mensagem - dois.du</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-          }
-          .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          }
-          .header {
-            background-color: #2F5233;
-            padding: 30px;
-            text-align: center;
-          }
-          .header img {
-            max-height: 80px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .content h1 {
-            color: #2F5233;
-            font-size: 24px;
-            margin-top: 0;
-          }
-          .field {
-            margin-bottom: 16px;
-          }
-          .field-label {
-            font-weight: bold;
-            color: #F46A2C;
-            display: block;
-            margin-bottom: 4px;
-          }
-          .field-value {
-            color: #333333;
-            padding: 8px 12px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-          }
-          .footer {
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-            color: #666666;
-            font-size: 14px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="email-container">
-          <div class="header">
-            <h1 style="color: white; margin:0; font-size: 32px;">dois.du</h1>
-          </div>
-          <div class="content">
-            <h1>Nova mensagem de contato!</h1>
-            <div class="field">
-              <span class="field-label">Nome:</span>
-              <span class="field-value">${name}</span>
-            </div>
-            <div class="field">
-              <span class="field-label">E-mail:</span>
-              <span class="field-value">${email}</span>
-            </div>
-            <div class="field">
-              <span class="field-label">Empresa:</span>
-              <span class="field-value">${company || 'Não informado'}</span>
-            </div>
-            <div class="field">
-              <span class="field-label">Serviço desejado:</span>
-              <span class="field-value">${service}</span>
-            </div>
-            <div class="field">
-              <span class="field-label">Mensagem:</span>
-              <div class="field-value">${message}</div>
-            </div>
-          </div>
-          <div class="footer">
-            Esta mensagem foi enviada através do site dois.du
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      subject: `Nova mensagem de contato de ${name}`,
+      text: `
+        Nome: ${name}
+        Email: ${email}
+        Telefone: ${phone || 'Não informado'}
+        
+        Mensagem:
+        ${message}
+      `,
+      html: `
+        <h2>Nova mensagem de contato</h2>
+        <p><strong>Nome:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Telefone:</strong> ${phone || 'Não informado'}</p>
+        <hr>
+        <p><strong>Mensagem:</strong></p>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+      `,
+    };
 
     // Send email
-    console.log('Attempting to send email...');
-    const info = await transporter.sendMail({
-      from: `"dois.du - Contato" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL,
-      subject: `Nova mensagem de ${name} - dois.du`,
-      html: htmlContent,
-      text: `
-        Nova mensagem de contato!
-        
-        Nome: ${name}
-        E-mail: ${email}
-        Empresa: ${company || 'Não informado'}
-        Serviço desejado: ${service}
-        Mensagem: ${message}
-      `,
-    });
-
-    console.log('Email sent successfully! Message ID:', info.messageId);
-
-    return NextResponse.json({ success: true, messageId: info.messageId }, { status: 200 });
+    await transporter.sendMail(mailOptions);
+    return NextResponse.json({ success: true, message: 'Mensagem enviada com sucesso!' });
   } catch (error) {
     console.error('Error sending email:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { success: false, error: errorMessage },
+      { success: false, message: 'Erro ao enviar mensagem. Tente novamente mais tarde.' },
       { status: 500 }
     );
   }
